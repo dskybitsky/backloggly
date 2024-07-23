@@ -1,8 +1,8 @@
-import {ChangeEvent, FormEvent, useState} from "react";
+import { ChangeEvent, FormEvent, useState } from 'react';
 
 const Initial_data = {
-    customer: "",
-    address: "",
+    customer: '',
+    address: '',
     price: 0,
 };
 const useCreateOrder = () => {
@@ -18,10 +18,10 @@ const useCreateOrder = () => {
         if (!data.address || !data.customer || !data.price) return;
 
         try {
-            await fetch("http://localhost:3001/order", {
-                method: "POST",
+            await fetch('http://localhost:3001/order', {
+                method: 'POST',
                 headers: {
-                    "content-type": "application/json",
+                    'content-type': 'application/json',
                 },
                 body: JSON.stringify(data),
             });

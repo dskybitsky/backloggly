@@ -1,5 +1,6 @@
-import { socket } from "@/utils/socket";
-import { useEffect, useState } from "react";
+import { socket } from '@/utils/socket';
+import { useEffect, useState } from 'react';
+import _ from 'lodash';
 
 interface Order {
     _id: string;
@@ -10,10 +11,10 @@ interface Order {
     updatedAt: string;
 }
 
-const GET_ORDERS_URL = "http://localhost:3001/order";
+const GET_ORDERS_URL = 'http://localhost:3001/order';
 const useOrder = () => {
     const [orders, setOrders] = useState<Order[]>([]);
-    //   responseable to fetch intital data through api.
+
     useEffect(() => {
         const fetchOrders = async () => {
             const response = await fetch(GET_ORDERS_URL);
@@ -24,10 +25,15 @@ const useOrder = () => {
         fetchOrders();
     }, []);
 
-    //   subscribes to realtime updates when order is added on server.
     useEffect(() => {
-        socket.on("order-added", (newData: Order) => {
-            setOrders((prevData) => [...prevData, newData]);
+        socket.on('order-added', (newData: Order) => {
+            setOrders((prevData) =>
+                _(prevData)
+                    .keyBy('_id')
+                    .merge(_.keyBy([newData], '_id'))
+                    .values()
+                    .value(),
+            );
         });
     }, []);
 
